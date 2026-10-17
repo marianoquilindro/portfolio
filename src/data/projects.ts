@@ -108,7 +108,7 @@ export const projects: Project[] = [
       },
       {
         title: "Cerrar una temporada es atómico",
-        body: "close_season() es una RPC con security definer: o se cierra la temporada y se liberan todas las sombrillas, o no pasa nada. No puede quedar un estado intermedio a medias con parte del mapa liberado.",
+        body: "Cerrar la temporada es todo o nada: la base ejecuta el cierre y la liberación del mapa como una sola operación. Si algo falla en el medio, no queda a medias con parte del mapa liberado.",
       },
       {
         title: "La fuente de verdad es una sola",
