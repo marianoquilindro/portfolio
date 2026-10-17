@@ -34,3 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# capturas originales: son la fuente de las imágenes de public/projects/.
+# No hacen falta en el repo, ya están procesadas y versionadas allá.
+/img progreso/

@@ -22,18 +22,20 @@ export const site = {
 } as const;
 
 /**
- * Stack que se muestra en la franja animada del home.
+ * Stack agrupado por capa. Se muestra en la sección 02.
  * Son tecnologías que uso de verdad — no conviene inflar la lista.
  */
-export const marqueeStack = [
-  "TypeScript",
-  "Next.js",
-  "React",
-  "Node.js",
-  "PostgreSQL",
-  "Supabase",
-  "Tailwind CSS",
-  "Python",
-  "Vercel",
-  "Git",
+export const stackGroups = [
+  {
+    label: "Frontend",
+    items: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+  },
+  {
+    label: "Backend y datos",
+    items: ["Node.js", "PostgreSQL", "Supabase", "TypeORM"],
+  },
+  {
+    label: "Plataforma",
+    items: ["Row Level Security", "Vercel", "Git", "REST"],
+  },
 ] as const;

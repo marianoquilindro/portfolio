@@ -8,6 +8,19 @@ export type Link = {
   href: string;
 };
 
+/** Una captura dentro del marco de navegador. */
+export type MediaView = {
+  src: string;
+  alt: string;
+  /** Rótulo del botón que la selecciona, cuando hay más de una. */
+  label: string;
+  /**
+   * Cómo se enmarca: en un marco de navegador (escritorio) o en uno de
+   * teléfono (móvil). Por defecto, navegador.
+   */
+  frame?: "browser" | "phone";
+};
+
 export type Project = {
   slug: string;
   title: string;
@@ -16,6 +29,22 @@ export type Project = {
   year: string;
   status: "En producción" | "Completado";
   featured: boolean;
+  /**
+   * Captura del proyecto en public/projects/. Es opcional: hay proyectos sin
+   * foto todavía, y en ese caso la fila se muestra a todo el ancho.
+   */
+  image?: string;
+  imageAlt?: string;
+  /**
+   * Varias capturas del mismo proyecto. Si están, se muestra una fila de
+   * botones para cambiarlas. Tiene prioridad sobre `image`.
+   */
+  views?: MediaView[];
+  /**
+   * Texto que muestra la barra del marco de la captura. Si el proyecto tiene
+   * URL pública va la URL; si es interno, una etiqueta honesta.
+   */
+  frameLabel?: string;
   /** Breve. Lo que se lee en la card de la grilla. */
   summary: string;
   /** El problema concreto que resolvía. Va primero: el stack es lo de después. */
@@ -42,6 +71,24 @@ export const projects: Project[] = [
     year: "2026",
     status: "En producción",
     featured: true,
+    views: [
+      {
+        src: "/projects/club-panel.webp",
+        alt: "Pantalla principal del Club El Progreso, con el resumen del club y la ocupación de la pileta",
+        label: "Principal",
+      },
+      {
+        src: "/projects/club-sombrillas.webp",
+        alt: "Mapa de sombrillas del Club El Progreso con las 60 posiciones y su estado: disponible, ocupada o reservada",
+        label: "Sombrillas",
+      },
+      {
+        src: "/projects/club-recaudacion.webp",
+        alt: "Módulo de recaudación del Club El Progreso, con el estado de los cobros del período",
+        label: "Recaudación",
+      },
+    ],
+    frameLabel: "Club El Progreso — sistema de uso interno",
     summary:
       "Sistema de gestión para un club de pileta: socios, planes, asignación de sombrillas sobre un mapa interactivo, pagos por temporada y trazabilidad completa de cada operación.",
     problem:
@@ -89,18 +136,35 @@ export const projects: Project[] = [
   {
     slug: "studio-74",
     title: "Studio 74",
-    tagline: "Landing de estudio en HTML, CSS y JavaScript, sin frameworks ni paso de build.",
-    role: "Diseño y desarrollo",
+    tagline:
+      "El estudio de desarrollo que cofundé con tres amigos: web a medida, de punta a punta.",
+    role: "Cofundador · desarrollo full-stack",
     year: "2026",
     status: "En producción",
     featured: true,
+    views: [
+      {
+        src: "/projects/studio-74.webp",
+        alt: "Landing de Studio 74 con el hero en lima y la grilla de proyectos del estudio",
+        label: "Escritorio",
+        frame: "browser",
+      },
+      {
+        src: "/projects/studio-74-mobile.webp",
+        alt: "El sitio de Studio 74 en versión móvil, con la barra de navegación arriba y el hero apilado",
+        label: "Celular",
+        frame: "phone",
+      },
+    ],
+    frameLabel: "studio74dev.github.io",
     summary:
-      "Sitio del estudio: hero, quiénes somos, proyectos, stack y contacto. Cero dependencias y cero compilación: se edita, se sube y está en línea.",
+      "Somos cuatro desarrolladores y hacemos web a medida: landings, sitios institucionales y sistemas de gestión. El sitio del estudio lo armé sin frameworks ni paso de build, y es también donde mostramos el club que hicimos juntos.",
     problem:
-      "El estudio necesitaba presencia online sin depender de un framework ni de un paso de build —que cualquiera del equipo pudiera editar el HTML y publicar— y, sobre todo, que ninguna consulta de contacto se perdiera.",
+      "Nos hacía falta una web propia que cualquiera de los cuatro pudiera editar y publicar sin instalar nada, y que no se perdiera ni una consulta de un cliente. Es la carta de presentación del estudio: un formulario que falla en silencio es un cliente que no vuelve.",
     highlights: [
       "Formulario con cadena de respaldo: contact.php → Web3Forms → mailto. Si los tres fallan, el visitante ve el error. Nunca un 'enviado' que no salió.",
       "Sin dependencias ni build: HTML, CSS y JS vanilla. Publicar es un git push a GitHub Pages.",
+      "El Club El Progreso va como caso destacado, con capturas reales del sistema ya en producción: el sitio es también donde mostramos lo que hacemos.",
       "SEO de base: canonical, og:url, JSON-LD, sitemap.xml y robots.txt.",
       "404 propio con los estilos en línea, para que no dependa del CSS principal.",
       "Imágenes en WebP y cache-busting explícito del CSS y el JS.",
@@ -158,39 +222,6 @@ export const projects: Project[] = [
         label: "Repositorio",
         href: "https://github.com/marianoquilindro/final-apps-interactivas",
       },
-    ],
-  },
-  {
-    slug: "ayed1-tp",
-    title: "Algoritmos y Estructuras de Datos",
-    tagline: "Ejercicios en Python, de funciones básicas a recursividad.",
-    role: "Trabajo práctico individual",
-    year: "2026",
-    status: "Completado",
-    featured: false,
-    summary:
-      "Colección de ejercicios del trabajo práctico de Algoritmos y Estructuras de Datos 1: ocho bloques que cubren desde funciones y listas hasta recursividad y diccionarios.",
-    problem:
-      "Ocho bloques de ejercicios que progresan en dificultad —funciones, listas, matrices, cadenas, excepciones, archivos, recursividad, y tuplas/conjuntos/diccionarios— y hacían falta poder ejecutarlos y probarlos todos de la misma manera.",
-    highlights: [
-      "Ocho bloques temáticos, cada uno con sus ejercicios resueltos y documentados.",
-      "Menú unificado por bloque: cada ejercicio se lanza y se prueba desde el mismo runner.",
-      "generar_menus.py arma los menús a partir de los archivos de cada bloque, así que registrar un ejercicio nuevo no exige editar el menú a mano.",
-      "Scripts de estructura para Windows (.bat) y Linux/Mac (.sh).",
-    ],
-    decisions: [
-      {
-        title: "Los menús se generan, no se escriben",
-        body: "Los menu.py de los ocho bloques son idénticos y se producen con generar_menus.py. Registrar un ejercicio es agregar el archivo y regenerar: no hay menús que se desincronicen del contenido real.",
-      },
-      {
-        title: "Documentar mientras se resuelve",
-        body: "Cada bloque tiene su README explicando qué cubre y cómo probarlo, y el repo acumula un README largo con el detalle de los ejercicios. La documentación se escribió junto al código, no al final.",
-      },
-    ],
-    stack: ["Python"],
-    links: [
-      { label: "Repositorio", href: "https://github.com/marianoquilindro/Quilindro-AyED1-TP" },
     ],
   },
 ];

@@ -1,41 +1,53 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { site } from "@/data/site";
 
-const links = [
-  { href: "/", label: "Inicio" },
-  { href: "/proyectos", label: "Proyectos" },
-  { href: "/sobre-mi", label: "Sobre mí" },
+const sections = [
+  { id: "sobre-mi", n: "01", label: "Sobre mí" },
+  { id: "stack", n: "02", label: "Stack" },
+  { id: "proyectos", n: "03", label: "Proyectos" },
+  { id: "contacto", n: "04", label: "Contacto" },
 ];
 
 export default function Header() {
-  const pathname = usePathname();
-  // Arranca cerrado en el cliente para no flashear el menú abierto en el SSR.
+  const [active, setActive] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
 
-  // Cerrar el menú al navegar y al volver a desktop.
+  // Resalta la sección que se está leyendo.
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+    if (typeof IntersectionObserver === "undefined") return;
 
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    const onChange = () => setOpen(false);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Quedarse con la entrada más visible del viewport.
+        const mostVisible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (mostVisible) setActive(mostVisible.target.id);
+      },
+      // Margen que define "estoy leyendo esta sección": banda central de la pantalla.
+      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+    );
+
+    for (const { id } of sections) {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    }
+    return () => observer.disconnect();
   }, []);
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+  // Cerrar el menú mobile al navegar.
+  useEffect(() => {
+    setOpen(false);
+  }, [active]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-edge/10 bg-background/75 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-container items-center justify-between px-6">
         <Link
-          href="/"
+          href="#top"
           className="group flex items-center gap-2.5"
           aria-label={`${site.name} — inicio`}
         >
@@ -47,23 +59,32 @@ export default function Header() {
           </span>
         </Link>
 
-        <nav className="flex items-center gap-1">
+        <nav aria-label="Secciones">
           <ul className="mr-2 hidden items-center gap-1 md:flex">
-            {links.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className={`rounded-lg px-3 py-2 text-sm transition-colors ${
-                    isActive(link.href)
-                      ? "text-foreground"
-                      : "text-muted hover:text-foreground"
-                  }`}
-                  aria-current={isActive(link.href) ? "page" : undefined}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+            {sections.map((section) => {
+              const isActive = active === section.id;
+              return (
+                <li key={section.id}>
+                  <a
+                    href={`#${section.id}`}
+                    aria-current={isActive ? "true" : undefined}
+                    className={`flex items-baseline gap-1.5 rounded-lg px-3 py-2 text-sm transition-colors ${
+                      isActive ? "text-foreground" : "text-muted hover:text-foreground"
+                    }`}
+                  >
+                    <span
+                      className={`font-mono text-[11px] transition-colors ${
+                        isActive ? "text-accent" : "text-faint"
+                      }`}
+                      aria-hidden="true"
+                    >
+                      {section.n}
+                    </span>
+                    {section.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
 
           <a
@@ -75,14 +96,6 @@ export default function Header() {
             GitHub
           </a>
 
-          <Link
-            href="/contacto"
-            className="ml-1 hidden rounded-lg bg-accent px-3.5 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 md:block"
-          >
-            Contacto
-          </Link>
-
-          {/* Botón hamburguesa — solo mobile. */}
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
@@ -117,37 +130,32 @@ export default function Header() {
         </nav>
       </div>
 
-      {/* Menú mobile */}
       <div
         id="menu-movil"
         hidden={!open}
         className="border-t border-edge/10 bg-background/95 backdrop-blur-xl md:hidden"
       >
-        <nav className="mx-auto max-w-container px-6 py-4">
+        <nav aria-label="Secciones" className="mx-auto max-w-container px-6 py-4">
           <ul className="flex flex-col gap-1">
-            {links.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className={`block rounded-lg px-3 py-2.5 text-[15px] transition-colors ${
-                    isActive(link.href)
-                      ? "bg-surface text-foreground"
-                      : "text-muted hover:text-foreground"
-                  }`}
-                  aria-current={isActive(link.href) ? "page" : undefined}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-            <li>
-              <Link
-                href="/contacto"
-                className="block rounded-lg bg-accent px-3 py-2.5 text-center text-[15px] font-medium text-background"
-              >
-                Contacto
-              </Link>
-            </li>
+            {sections.map((section) => {
+              const isActive = active === section.id;
+              return (
+                <li key={section.id}>
+                  <a
+                    href={`#${section.id}`}
+                    aria-current={isActive ? "true" : undefined}
+                    className={`flex items-baseline gap-2 rounded-lg px-3 py-2.5 text-[15px] transition-colors ${
+                      isActive ? "bg-surface text-foreground" : "text-muted"
+                    }`}
+                  >
+                    <span className="font-mono text-[11px] text-faint" aria-hidden="true">
+                      {section.n}
+                    </span>
+                    {section.label}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </nav>
       </div>

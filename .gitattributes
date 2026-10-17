@@ -1,0 +1,13 @@
+# Normalizo a LF en el repo. Windows convive con macOS/Linux y los finales de
+# línea distintos generan diffs falsos en cada archivo tocado.
+* text=auto eol=lf
+
+# Binarios: nunca pasan por normalización.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.webp binary
+*.ico  binary
+*.woff binary
+*.woff2 binary
+*.zip  binary

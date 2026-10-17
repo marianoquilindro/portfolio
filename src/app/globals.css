@@ -98,6 +98,107 @@
   }
 }
 
+/* ── Animaciones ────────────────────────────────────────────────
+ * Todo esto está puertado por la clase `.js` en <html>. Si no hay JS,
+ * los elementos nunca quedan ocultos: el contenido se ve entero.
+ * Es la misma técnica que usa el navegador para no dejar texto invisible.
+ */
+
+/* Reveal genérico al entrar en pantalla. `--i` escala el retardo. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Líneas del hero que suben desde una máscara, como texto que aparece. */
+.js [data-line] {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.js [data-line] > span {
+  display: block;
+  transform: translateY(110%);
+  animation: line-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+@keyframes line-up {
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Párrafo revelado palabra por palabra. */
+.js [data-words] span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.35em);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--w, 0) * 22ms);
+}
+.js [data-words].is-visible span {
+  opacity: 1;
+  transform: none;
+}
+
+/* Barra de progreso de scroll. */
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  transform: scaleX(var(--progress, 0));
+  transform-origin: 0 50%;
+  background: rgb(var(--accent));
+  z-index: 60;
+}
+
+/* Parallax de las imágenes de proyecto. La imagen va agrandada dentro de su
+   marco para que el movimiento no deje bordes vacíos. */
+.parallax-frame {
+  overflow: hidden;
+}
+.parallax-frame img {
+  transform: translateY(calc(var(--parallax, 0) * 5%)) scale(1.1);
+  will-change: transform;
+}
+
+/* Entrada de la captura al cambiar de vista. Solo opacidad: la imagen ya
+   lleva su propio transform por el parallax, y pisarlo la descuadraría. */
+.media-in {
+  animation: media-in 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes media-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Flecha de los links de contacto que se desplaza al pasar el mouse. */
+.arrow-shift {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.group\/link:hover .arrow-shift,
+a:hover > .arrow-shift {
+  transform: translate(3px, -3px);
+}
+
 /* Respeta a quien pidió menos movimiento en el sistema. */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -109,5 +210,17 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /* Con menos movimiento, el contenido aparece entero de una:
+     sin desplazamientos ni revelados escalonados. */
+  .js [data-reveal],
+  .js [data-words] span {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .js [data-line] > span {
+    animation: none !important;
+    transform: none !important;
   }
 }

@@ -1,173 +1,238 @@
 import Link from "next/link";
-import ProjectCard from "@/components/ProjectCard";
-import { featuredProjects } from "@/data/projects";
-import { marqueeStack, site } from "@/data/site";
+import ProjectRow from "@/components/ProjectRow";
+import Reveal from "@/components/Reveal";
+import Words from "@/components/Words";
+import ContactForm from "@/components/ContactForm";
+import { projects } from "@/data/projects";
+import { site, stackGroups } from "@/data/site";
 
-const principles = [
-  {
-    n: "01",
-    title: "Las reglas van donde no se pueden saltear",
-    body: "Una validación que vive solo en el formulario es una invitación. Las reglas de negocio importantes las pongo en el servidor o en la base, donde cualquier camino —un script, otro cliente, un alta directa— las respeta.",
-  },
-  {
-    n: "02",
-    title: "Un solo lugar para la verdad",
-    body: "Cuando el mismo dato se guarda en dos tablas que pueden desincronizarse, el sistema empieza a mentir. Prefiero calcular el estado al leer antes que mantener dos versiones que eventualmente divergen.",
-  },
-  {
-    n: "03",
-    title: "Documentar mientras se decide",
-    body: "El porqué de una decisión se olvida en dos semanas. Dejo escrito qué alternativas había, por qué ganó una y qué conviene revisar después —incluso cuando la respuesta es 'esto es un parche y acá está el ticket'.",
-  },
+const heroLines = ["Mariano", "Quilindro"];
+
+const pillars = [
+  "APIs y bases de datos",
+  "Autenticación y control de acceso",
+  "Interfaces web",
+  "Modelado de datos",
+];
+
+const contactChannels = [
+  { label: "Mail", value: site.email, href: `mailto:${site.email}`, external: false },
+  { label: "GitHub", value: "@marianoquilindro", href: site.github, external: true },
+  { label: "Studio 74", value: "studio74dev.github.io", href: site.studio, external: true },
 ];
 
 export default function Home() {
   return (
     <>
-      {/* ── Hero ───────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
+      {/* ── 00 · Hero ──────────────────────────────────────────── */}
+      <section id="top" className="relative overflow-hidden">
         <div
           className="glow -top-40 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 bg-accent/10"
           aria-hidden="true"
         />
-        <div className="relative mx-auto max-w-container px-6 pb-20 pt-20 sm:pt-28 md:pb-28 md:pt-36">
-          <div className="max-w-3xl">
-            <p className="animate-fade-up font-mono text-sm text-accent">
+        <div className="relative mx-auto max-w-container px-6 pb-24 pt-24 sm:pt-32 md:pb-32 md:pt-40">
+          <p className="font-mono text-sm text-accent">{"// portfolio"}</p>
+
+          <h1 className="mt-6 text-5xl font-medium leading-[0.95] tracking-tight sm:text-7xl md:text-8xl">
+            {heroLines.map((line, i) => (
+              <span key={line} data-line="" className="overflow-hidden">
+                <span style={{ "--i": i + 1 } as React.CSSProperties}>{line}</span>
+              </span>
+            ))}
+          </h1>
+
+          <Reveal delay={3}>
+            <p className="mt-8 text-lg text-muted">
               {site.role} · {site.location}
             </p>
+          </Reveal>
 
-            <h1
-              className="mt-5 animate-fade-up text-balance text-4xl font-medium leading-[1.08] tracking-tight sm:text-6xl md:text-7xl"
-              style={{ animationDelay: "60ms" }}
-            >
-              Hago aplicaciones que{" "}
-              <span className="text-muted">resuelven problemas</span> de verdad.
-            </h1>
-
-            <p
-              className="mt-7 max-w-prose animate-fade-up text-lg leading-relaxed text-muted text-pretty"
-              style={{ animationDelay: "120ms" }}
-            >
-              Trabajo de punta a punta: modelar la base, escribir la API y
-              construir la interfaz. Me interesa el detalle que se nota cuando el
-              sistema crece —la regla que no se puede saltear, el estado que no se
-              desincroniza, la decisión que quedó explicada.
+          <Reveal delay={4}>
+            <p className="mt-3 max-w-prose text-balance text-2xl leading-snug tracking-tight sm:text-3xl">
+              Construyo aplicaciones completas: de la base de datos a la interfaz.
             </p>
+          </Reveal>
 
-            <div
-              className="mt-10 flex flex-wrap items-center gap-3 animate-fade-up"
-              style={{ animationDelay: "180ms" }}
-            >
-              <Link
-                href="/proyectos"
+          <Reveal delay={5}>
+            <div className="mt-10 flex flex-wrap items-center gap-3">
+              <a
+                href="#proyectos"
                 className="rounded-lg bg-accent px-5 py-2.5 text-[15px] font-medium text-background transition-opacity hover:opacity-90"
               >
                 Ver proyectos
-              </Link>
-              <Link
-                href="/contacto"
+              </a>
+              <a
+                href="#contacto"
                 className="rounded-lg border border-edge/15 px-5 py-2.5 text-[15px] font-medium text-foreground transition-colors hover:border-edge/30 hover:bg-surface"
               >
                 Hablemos
-              </Link>
+              </a>
             </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── 01 · Sobre mí ──────────────────────────────────────── */}
+      <section id="sobre-mi" className="mx-auto max-w-container px-6 py-20 md:py-28">
+        <div className="grid gap-10 lg:grid-cols-[10rem_1fr] lg:gap-16">
+          <p className="font-mono text-sm text-accent">01 — Sobre mí</p>
+
+          <div className="max-w-prose space-y-7">
+            <Words
+              text="Trabajo de punta a punta: modelo los datos, escribo la API y construyo la interfaz, y cuando hace falta dejo resueltos también el despliegue y las políticas de acceso. Poder pensar el sistema completo —en vez de una capa aislada— es lo que me permite encontrar los problemas antes de que lleguen a producción."
+              className="text-xl leading-relaxed tracking-tight text-pretty sm:text-2xl"
+            />
+
+            <Reveal delay={2}>
+              <p className="text-[17px] leading-relaxed text-muted text-pretty">
+                Lo más concreto de lo que hago está en{" "}
+                <Link
+                  href="#proyectos"
+                  className="link-underline font-medium text-foreground"
+                >
+                  Club El Progreso
+                </Link>
+                , un sistema de gestión para un club de pileta con autenticación,
+                control de acceso a nivel de base, mapa interactivo de sombrillas y
+                trazabilidad de cada operación. Ahí aparecieron las decisiones que
+                más me enseñaron: dónde poner una regla para que no se pueda
+                saltear, y cómo modelar un ciclo estacional que arranca y cierra
+                cada año.
+              </p>
+            </Reveal>
+
+            <Reveal delay={3}>
+              <p className="text-[17px] leading-relaxed text-muted text-pretty">
+                También cofundé{" "}
+                <Link
+                  href="#proyectos"
+                  className="link-underline font-medium text-foreground"
+                >
+                  Studio 74
+                </Link>
+                , el estudio de desarrollo que armamos con tres amigos, donde
+                hacemos web a medida: landings, sitios institucionales y sistemas
+                de gestión. El sitio del estudio lo hice sin frameworks ni paso de
+                build — una decisión de mantenimiento, para que cualquiera del
+                equipo pueda editar y publicar sin instalar nada.
+              </p>
+            </Reveal>
+
+            <Reveal delay={4}>
+              <ul className="grid gap-x-8 gap-y-2 pt-3 font-mono text-sm text-muted sm:grid-cols-2">
+                {pillars.map((pillar, i) => (
+                  <li key={pillar} className="flex gap-3">
+                    <span className="text-faint" aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    {pillar}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* ── Franja de stack ─────────────────────────────────────── */}
-      <section aria-label="Tecnologías con las que trabajo" className="border-y border-edge/10 py-5">
-        {/* overflow-hidden + doble lista = marquee. La copia está duplicada a propósito. */}
-        <div className="group flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="flex shrink-0 animate-marquee items-center gap-10 pr-10 group-hover:[animation-play-state:paused]">
-            {[...marqueeStack, ...marqueeStack].map((tech, i) => (
-              <span
-                key={`${tech}-${i}`}
-                className="flex shrink-0 items-center gap-3 font-mono text-sm text-faint"
-              >
-                <span className="h-1 w-1 rounded-full bg-accent/50" aria-hidden="true" />
-                {tech}
-              </span>
+      {/* ── 02 · Stack ─────────────────────────────────────────── */}
+      <section id="stack" className="border-y border-edge/10 bg-surface/40">
+        <div className="mx-auto max-w-container px-6 py-20 md:py-28">
+          <p className="font-mono text-sm text-accent">02 — Stack</p>
+          <h2 className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
+            Con qué trabajo
+          </h2>
+
+          <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            {stackGroups.map((group, i) => (
+              <Reveal key={group.label} delay={i}>
+                <h3 className="font-mono text-sm text-faint">{group.label}</h3>
+                <ul className="mt-4 space-y-1.5">
+                  {group.items.map((item) => (
+                    <li key={item} className="text-lg tracking-tight">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Proyectos destacados ────────────────────────────────── */}
-      <section className="mx-auto max-w-container px-6 py-20 md:py-28">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="font-mono text-sm text-accent">01 — Trabajo seleccionado</p>
-            <h2 className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
-              Proyectos destacados
-            </h2>
-          </div>
-          <Link
-            href="/proyectos"
-            className="link-underline text-sm text-muted transition-colors hover:text-foreground"
-          >
-            Ver todos →
-          </Link>
+      {/* ── 03 · Proyectos ─────────────────────────────────────── */}
+      <section id="proyectos" className="mx-auto max-w-container px-6 pt-20 md:pt-28">
+        <div className="max-w-2xl">
+          <p className="font-mono text-sm text-accent">03 — Proyectos</p>
+          <h2 className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
+            Trabajo seleccionado
+          </h2>
+          <p className="mt-5 text-lg leading-relaxed text-muted text-pretty">
+            El problema concreto, las decisiones de diseño que hubo que tomar y el
+            stack al final. Es lo menos interesante.
+          </p>
         </div>
 
-        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {featuredProjects.map((project) => (
-            <ProjectCard key={project.slug} project={project} featured />
+        <div className="mt-12">
+          {projects.map((project, i) => (
+            <ProjectRow
+              key={project.slug}
+              project={project}
+              index={i + 1}
+              flip={i % 2 === 1}
+            />
           ))}
         </div>
       </section>
 
-      {/* ── Enfoque ─────────────────────────────────────────────── */}
-      <section className="border-t border-edge/10 bg-surface/40">
+      {/* ── 04 · Contacto ──────────────────────────────────────── */}
+      <section id="contacto" className="border-t border-edge/10">
         <div className="mx-auto max-w-container px-6 py-20 md:py-28">
-          <p className="font-mono text-sm text-accent">02 — Cómo trabajo</p>
-          <h2 className="mt-3 max-w-2xl text-3xl font-medium tracking-tight sm:text-4xl">
-            Tres cosas en las que insisto
-          </h2>
+          <div className="grid gap-14 lg:grid-cols-2 lg:gap-24">
+            <div>
+              <p className="font-mono text-sm text-accent">04 — Contacto</p>
+              <h2 className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
+                Escribime
+              </h2>
+              <p className="mt-5 max-w-prose text-lg leading-relaxed text-muted text-pretty">
+                Si tenés un proyecto, una vacante o una duda, mandame un mensaje.
+                Respondo siempre, aunque lleve unos días.
+              </p>
 
-          <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-edge/10 bg-edge/10 md:grid-cols-3">
-            {principles.map((p) => (
-              <div key={p.n} className="bg-background p-7">
-                <span className="font-mono text-sm text-faint">{p.n}</span>
-                <h3 className="mt-4 text-lg font-medium tracking-tight">{p.title}</h3>
-                <p className="mt-3 text-[15px] leading-relaxed text-muted text-pretty">
-                  {p.body}
-                </p>
+              <ul className="mt-10">
+                {contactChannels.map((channel) => (
+                  <li key={channel.label} className="border-t border-edge/10 last:border-b">
+                    <a
+                      href={channel.href}
+                      {...(channel.external
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
+                      className="group flex items-center justify-between gap-4 py-5 transition-colors hover:text-accent"
+                    >
+                      <span className="flex items-baseline gap-4">
+                        <span className="font-mono text-xs text-faint">
+                          {channel.label}
+                        </span>
+                        <span className="text-lg tracking-tight">{channel.value}</span>
+                      </span>
+                      <span className="arrow-shift text-accent" aria-hidden="true">
+                        ↗
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <Reveal className="h-fit rounded-2xl border border-edge/10 bg-surface/50 p-6 sm:p-8">
+              <h3 className="text-lg font-medium tracking-tight">Mandame un mensaje</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted">
+                Este formulario no usa servidor: prepara el mail y lo abre en tu
+                aplicación de correo, con el mensaje ya escrito.
+              </p>
+              <div className="mt-7">
+                <ContactForm />
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA ─────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-t border-edge/10">
-        <div
-          className="glow -bottom-56 left-1/2 h-96 w-96 -translate-x-1/2 bg-accent/10"
-          aria-hidden="true"
-        />
-        <div className="relative mx-auto max-w-container px-6 py-24 text-center md:py-32">
-          <h2 className="mx-auto max-w-2xl text-balance text-3xl font-medium tracking-tight sm:text-5xl">
-            ¿Tenés algo en mente?
-          </h2>
-          <p className="mx-auto mt-5 max-w-prose text-lg leading-relaxed text-muted text-pretty">
-            Estoy abierto a oportunidades y a proyectos. Escribime y charlamos:
-            respondo siempre.
-          </p>
-          <div className="mt-9 flex flex-wrap justify-center gap-3">
-            <a
-              href={`mailto:${site.email}`}
-              className="rounded-lg bg-accent px-5 py-2.5 text-[15px] font-medium text-background transition-opacity hover:opacity-90"
-            >
-              Escribime
-            </a>
-            <a
-              href={site.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-lg border border-edge/15 px-5 py-2.5 text-[15px] font-medium text-foreground transition-colors hover:border-edge/30 hover:bg-surface"
-            >
-              Ver GitHub
-            </a>
+            </Reveal>
           </div>
         </div>
       </section>
