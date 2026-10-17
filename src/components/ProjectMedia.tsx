@@ -57,15 +57,13 @@ export default function ProjectMedia({ views, label, title, idBase }: Props) {
   const panelId = `${idBase}-vista`;
   const tabId = (index: number) => `${idBase}-vista-${index}`;
 
-  // data-parallax: ScrollEffects le escribe --parallax y la captura se mueve
-  // dentro del marco. Ver `.parallax-frame` en globals.css.
+  // La captura entra entera dentro del marco: ver `.media-frame` en globals.css.
   const screen = (
     <div
       id={panelId}
       role={multi ? "tabpanel" : undefined}
       aria-labelledby={multi ? tabId(active) : undefined}
-      data-parallax=""
-      className={`parallax-frame relative bg-background ${
+      className={`media-frame relative bg-background ${
         isPhone ? "aspect-[390/844]" : "aspect-[2/1]"
       }`}
     >

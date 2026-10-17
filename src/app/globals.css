@@ -165,18 +165,14 @@
   z-index: 60;
 }
 
-/* Parallax de las imágenes de proyecto. La imagen va agrandada dentro de su
-   marco para que el movimiento no deje bordes vacíos. */
-.parallax-frame {
+/* Marco de la captura. Sin zoom ni desplazamiento: la captura entra entera.
+   Cualquier recorte se come el borde, y en el borde está justo el texto que
+   hay que poder leer. */
+.media-frame {
   overflow: hidden;
 }
-.parallax-frame img {
-  transform: translateY(calc(var(--parallax, 0) * 5%)) scale(1.1);
-  will-change: transform;
-}
 
-/* Entrada de la captura al cambiar de vista. Solo opacidad: la imagen ya
-   lleva su propio transform por el parallax, y pisarlo la descuadraría. */
+/* Entrada de la captura al cambiar de vista. */
 .media-in {
   animation: media-in 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
