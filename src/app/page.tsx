@@ -112,9 +112,7 @@ export default function Home() {
                 </Link>
                 , el estudio de desarrollo que armamos con tres amigos, donde
                 hacemos web a medida: landings, sitios institucionales y sistemas
-                de gestión. El sitio del estudio lo hice sin frameworks ni paso de
-                build — una decisión de mantenimiento, para que cualquiera del
-                equipo pueda editar y publicar sin instalar nada.
+                de gestión.
               </p>
             </Reveal>
 
