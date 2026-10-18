@@ -38,12 +38,12 @@ export default function ProjectRow({
       aria-labelledby={`${project.slug}-title`}
       className={
         hasImage
-          ? "grid items-center gap-10 border-t border-edge/10 py-16 md:gap-16 lg:grid-cols-2 lg:py-24"
-          : "border-t border-edge/10 py-16 lg:py-24"
+          ? "grid w-full min-w-0 items-center gap-10 border-t border-edge/10 py-12 md:gap-16 lg:grid-cols-2 lg:py-24"
+          : "w-full min-w-0 border-t border-edge/10 py-12 lg:py-24"
       }
     >
       {hasImage ? (
-        <Reveal className={flip ? "lg:order-2" : ""}>
+        <Reveal className={`w-full min-w-0 ${flip ? "lg:order-2" : ""}`}>
           <ProjectMedia
             views={views}
             label={project.frameLabel ?? project.title}
@@ -53,7 +53,7 @@ export default function ProjectRow({
         </Reveal>
       ) : null}
 
-      <div className={hasImage ? (flip ? "lg:order-1" : "") : "max-w-3xl"}>
+      <div className={`w-full min-w-0 ${hasImage ? (flip ? "lg:order-1" : "") : "max-w-3xl"}`}>
         <Reveal delay={1}>
           <p className="font-mono text-xs text-faint">
             <span aria-hidden="true">

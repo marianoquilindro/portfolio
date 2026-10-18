@@ -12,7 +12,7 @@ export default function PhoneFrame({ children }: { children: ReactNode }) {
     <div className="group/frame relative mx-auto w-full max-w-[286px]">
       {/* Halo que se enciende al pasar el mouse. Decorativo. */}
       <div
-        className="pointer-events-none absolute -inset-6 rounded-[3rem] bg-accent/[0.08] opacity-0 blur-3xl transition-opacity duration-500 group-hover/frame:opacity-100"
+        className="pointer-events-none absolute -inset-2 sm:-inset-6 rounded-[3rem] bg-accent/[0.08] opacity-0 blur-2xl sm:blur-3xl transition-opacity duration-500 group-hover/frame:opacity-100"
         aria-hidden="true"
       />
 

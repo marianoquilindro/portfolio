@@ -5,6 +5,10 @@ const nextConfig = {
    * falta el Image Optimizer de Next: sirve el archivo tal cual. Además deja
    * afuera una superficie de ataque que no necesitamos en un sitio estático.
    */
+  /**
+   * Desactiva el indicador flotante de desarrollo de Next.js en localhost.
+   */
+  devIndicators: false,
   images: {
     unoptimized: true,
   },

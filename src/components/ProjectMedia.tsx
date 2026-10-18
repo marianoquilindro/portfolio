@@ -63,7 +63,7 @@ export default function ProjectMedia({ views, label, title, idBase }: Props) {
       id={panelId}
       role={multi ? "tabpanel" : undefined}
       aria-labelledby={multi ? tabId(active) : undefined}
-      className={`media-frame relative bg-background ${
+      className={`media-frame relative w-full overflow-hidden bg-background ${
         isPhone ? "aspect-[390/844]" : "aspect-[2/1]"
       }`}
     >
@@ -74,13 +74,13 @@ export default function ProjectMedia({ views, label, title, idBase }: Props) {
         alt={view.alt}
         fill
         sizes={isPhone ? "288px" : "(min-width: 1024px) 50vw, 100vw"}
-        className="media-in object-cover"
+        className="media-in object-cover object-left-top"
       />
     </div>
   );
 
   return (
-    <div>
+    <div className="w-full min-w-0">
       {isPhone ? (
         <PhoneFrame>{screen}</PhoneFrame>
       ) : (
@@ -92,7 +92,7 @@ export default function ProjectMedia({ views, label, title, idBase }: Props) {
           role="tablist"
           aria-label={`Vistas de ${title}`}
           onKeyDown={onKeyDown}
-          className={`mt-4 flex flex-wrap gap-2 ${isPhone ? "justify-center" : ""}`}
+          className={`mt-3 sm:mt-4 flex flex-wrap gap-1.5 sm:gap-2 ${isPhone ? "justify-center" : ""}`}
         >
           {views.map((item, index) => (
             <button
@@ -107,7 +107,7 @@ export default function ProjectMedia({ views, label, title, idBase }: Props) {
               aria-controls={panelId}
               tabIndex={index === active ? 0 : -1}
               onClick={() => setActive(index)}
-              className={`rounded-lg border px-3 py-1.5 font-mono text-[11px] transition-colors ${
+              className={`rounded-lg border px-2.5 py-1 sm:px-3 sm:py-1.5 font-mono text-[10px] sm:text-[11px] transition-colors ${
                 index === active
                   ? "border-accent/40 bg-accent/10 text-foreground"
                   : "border-edge/10 bg-raised text-muted hover:border-edge/20 hover:text-foreground"

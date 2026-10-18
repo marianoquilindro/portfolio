@@ -18,27 +18,29 @@ type Props = {
  */
 export default function BrowserFrame({ label, children }: Props) {
   return (
-    <div className="group/frame relative">
-      {/* Halo que se enciende al pasar el mouse. Decorativo. */}
+    <div className="group/frame relative w-full min-w-0">
+      {/* Halo que se enciende al pasar el mouse. Acotado en móvil para no desbordar. */}
       <div
-        className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-accent/[0.08] opacity-0 blur-3xl transition-opacity duration-500 group-hover/frame:opacity-100"
+        className="pointer-events-none absolute -inset-2 sm:-inset-6 rounded-[2rem] bg-accent/[0.08] opacity-0 blur-2xl sm:blur-3xl transition-opacity duration-500 group-hover/frame:opacity-100"
         aria-hidden="true"
       />
 
-      <div className="relative overflow-hidden rounded-xl border border-edge/10 bg-surface shadow-[0_24px_70px_-24px_rgba(0,0,0,0.75)] transition-all duration-500 group-hover/frame:-translate-y-1 group-hover/frame:border-edge/20">
-        {/* Barra del navegador. */}
-        <div className="flex items-center gap-3 border-b border-edge/10 bg-raised/70 px-3.5 py-2.5">
+      <div className="relative w-full min-w-0 overflow-hidden rounded-xl border border-edge/10 bg-surface shadow-[0_24px_70px_-24px_rgba(0,0,0,0.75)] transition-all duration-500 group-hover/frame:-translate-y-1 group-hover/frame:border-edge/20">
+        {/* Barra del navegador */}
+        <div className="flex w-full min-w-0 items-center gap-2 sm:gap-3 border-b border-edge/10 bg-raised/70 px-3 py-2 sm:px-3.5 sm:py-2.5">
           <span className="flex shrink-0 gap-1.5" aria-hidden="true">
             <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
           </span>
-          <span className="min-w-0 flex-1 truncate rounded-md bg-background/60 px-3 py-1 text-center font-mono text-[11px] leading-4 text-faint">
+          <span className="min-w-0 flex-1 truncate rounded-md bg-background/60 px-2 sm:px-3 py-0.5 sm:py-1 text-center font-mono text-[10px] sm:text-[11px] leading-4 text-faint">
             {label}
           </span>
         </div>
 
-        {children}
+        <div className="w-full min-w-0 overflow-hidden">
+          {children}
+        </div>
       </div>
     </div>
   );

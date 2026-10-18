@@ -30,10 +30,10 @@ export default function Home() {
           className="glow -top-40 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 bg-accent/10"
           aria-hidden="true"
         />
-        <div className="relative mx-auto max-w-container px-6 pb-24 pt-24 sm:pt-32 md:pb-32 md:pt-40">
+        <div className="relative mx-auto max-w-container px-4 sm:px-6 pb-20 pt-28 sm:pt-36 md:pb-32 md:pt-44">
           <p className="font-mono text-sm text-accent">{"// portfolio"}</p>
 
-          <h1 className="mt-6 text-5xl font-medium leading-[0.95] tracking-tight sm:text-7xl md:text-8xl">
+          <h1 className="mt-6 text-4xl xs:text-5xl font-medium leading-[0.95] tracking-tight sm:text-7xl md:text-8xl break-words">
             {heroLines.map((line, i) => (
               <span key={line} data-line="" className="overflow-hidden">
                 <span style={{ "--i": i + 1 } as React.CSSProperties}>{line}</span>
@@ -73,7 +73,7 @@ export default function Home() {
       </section>
 
       {/* ── 01 · Sobre mí ──────────────────────────────────────── */}
-      <section id="sobre-mi" className="mx-auto max-w-container px-6 py-20 md:py-28">
+      <section id="sobre-mi" className="scroll-mt-24 mx-auto max-w-container px-4 sm:px-6 py-20 md:py-28">
         <div className="grid gap-10 lg:grid-cols-[10rem_1fr] lg:gap-16">
           <p className="font-mono text-sm text-accent">01 — Sobre mí</p>
 
@@ -133,32 +133,58 @@ export default function Home() {
       </section>
 
       {/* ── 02 · Stack ─────────────────────────────────────────── */}
-      <section id="stack" className="border-y border-edge/10 bg-surface/40">
-        <div className="mx-auto max-w-container px-6 py-20 md:py-28">
+      <section id="stack" className="scroll-mt-24 border-y border-edge/10 bg-surface/40">
+        <div className="mx-auto max-w-container px-4 sm:px-6 py-20 md:py-28">
           <p className="font-mono text-sm text-accent">02 — Stack</p>
           <h2 className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
             Con qué trabajo
           </h2>
 
-          <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-            {stackGroups.map((group, i) => (
-              <Reveal key={group.label} delay={i}>
-                <h3 className="font-mono text-sm text-faint">{group.label}</h3>
-                <ul className="mt-4 space-y-1.5">
-                  {group.items.map((item) => (
-                    <li key={item} className="text-lg tracking-tight">
-                      {item}
-                    </li>
+          <div className="mt-12 space-y-10">
+            {stackGroups.map((group, groupIdx) => (
+              <div key={group.label} className="space-y-4">
+                <Reveal delay={groupIdx}>
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-mono text-xs uppercase tracking-wider text-accent">
+                      {group.label}
+                    </h3>
+                    <span className="h-px flex-1 bg-edge/10" aria-hidden="true" />
+                  </div>
+                </Reveal>
+
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  {group.items.map((tech, i) => (
+                    <Reveal key={tech.name} delay={i + 1}>
+                      <div className="group relative flex flex-col justify-between h-full rounded-xl border border-edge/10 bg-surface/60 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:bg-surface hover:shadow-xl hover:shadow-accent/5">
+                        <div>
+                          <div className="flex items-center justify-between gap-2">
+                            <h4 className="text-[15px] font-medium tracking-tight text-foreground transition-colors group-hover:text-accent">
+                              {tech.name}
+                            </h4>
+                            <span className="rounded-md border border-edge/10 bg-raised px-2 py-0.5 font-mono text-[10px] text-faint transition-colors group-hover:border-accent/30 group-hover:text-accent-soft">
+                              {tech.tag}
+                            </span>
+                          </div>
+                          <p className="mt-2.5 text-xs leading-relaxed text-muted transition-colors group-hover:text-foreground/90">
+                            {tech.description}
+                          </p>
+                        </div>
+                        <div className="mt-4 flex items-center gap-1.5 pt-2.5 border-t border-edge/5 font-mono text-[11px] text-faint group-hover:text-accent transition-colors">
+                          <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent/60 group-hover:scale-125 transition-transform" />
+                          <span>Stack activo</span>
+                        </div>
+                      </div>
+                    </Reveal>
                   ))}
-                </ul>
-              </Reveal>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── 03 · Proyectos ─────────────────────────────────────── */}
-      <section id="proyectos" className="mx-auto max-w-container px-6 pt-20 md:pt-28">
+      <section id="proyectos" className="scroll-mt-24 mx-auto max-w-container px-4 sm:px-6 pt-24 md:pt-28">
         <div className="max-w-2xl">
           <p className="font-mono text-sm text-accent">03 — Proyectos</p>
           <h2 className="mt-3 text-3xl font-medium tracking-tight sm:text-4xl">
@@ -183,8 +209,8 @@ export default function Home() {
       </section>
 
       {/* ── 04 · Contacto ──────────────────────────────────────── */}
-      <section id="contacto" className="border-t border-edge/10">
-        <div className="mx-auto max-w-container px-6 py-20 md:py-28">
+      <section id="contacto" className="scroll-mt-24 border-t border-edge/10">
+        <div className="mx-auto max-w-container px-4 sm:px-6 py-20 md:py-28">
           <div className="grid gap-14 lg:grid-cols-2 lg:gap-24">
             <div>
               <p className="font-mono text-sm text-accent">04 — Contacto</p>
@@ -206,13 +232,13 @@ export default function Home() {
                         : {})}
                       className="group flex items-center justify-between gap-4 py-5 transition-colors hover:text-accent"
                     >
-                      <span className="flex items-baseline gap-4">
-                        <span className="font-mono text-xs text-faint">
+                      <span className="flex items-baseline gap-4 min-w-0">
+                        <span className="font-mono text-xs text-faint shrink-0">
                           {channel.label}
                         </span>
-                        <span className="text-lg tracking-tight">{channel.value}</span>
+                        <span className="text-base sm:text-lg tracking-tight truncate">{channel.value}</span>
                       </span>
-                      <span className="arrow-shift text-accent" aria-hidden="true">
+                      <span className="arrow-shift text-accent shrink-0" aria-hidden="true">
                         ↗
                       </span>
                     </a>
@@ -224,8 +250,7 @@ export default function Home() {
             <Reveal className="h-fit rounded-2xl border border-edge/10 bg-surface/50 p-6 sm:p-8">
               <h3 className="text-lg font-medium tracking-tight">Mandame un mensaje</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">
-                Este formulario no usa servidor: prepara el mail y lo abre en tu
-                aplicación de correo, con el mensaje ya escrito.
+                Escribime tu consulta y podés enviarla directo, abrirla en Gmail o copiar mi correo al portapapeles.
               </p>
               <div className="mt-7">
                 <ContactForm />
