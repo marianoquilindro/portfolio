@@ -70,6 +70,7 @@ export default function ContactForm() {
             email: email,
             message: mensaje,
             subject: subject,
+            botcheck: false,
           }),
         });
 
@@ -163,6 +164,15 @@ export default function ContactForm() {
             </p>
           ) : null}
         </div>
+
+        {/* Honeypot anti-spam: Web3Forms lo ignora si está vacío, los bots lo llenan */}
+        <input
+          type="checkbox"
+          name="botcheck"
+          className="absolute -left-[9999px] opacity-0"
+          tabIndex={-1}
+          autoComplete="off"
+        />
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <button
