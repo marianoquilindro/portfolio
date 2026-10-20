@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -47,7 +47,8 @@ export const metadata: Metadata = {
     description: site.tagline,
   },
   twitter: {
-    card: "summary",
+    // Las imágenes (/twitter-image.tsx) las agrega Next por convención de archivo.
+    card: "summary_large_image",
     title: `${site.name} — ${site.role}`,
     description: site.tagline,
   },
@@ -64,6 +65,15 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico?v=5",
     apple: "/icon-192.png?v=5",
   },
+};
+
+/** Color de la barra del navegador en mobile. Sigue al tema del sistema; el
+ *  toggle interno del sitio no puede actualizar el meta, y está bien así. */
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0a0d12" },
+    { media: "(prefers-color-scheme: light)", color: "#f5f6f6" },
+  ],
 };
 
 export default function RootLayout({
@@ -93,6 +103,24 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{document.documentElement.classList.add('js');var t=null;try{t=localStorage.getItem('portfolio-theme')}catch(e){}if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}document.documentElement.setAttribute('data-theme',t)}catch(e){}})()`,
+          }}
+        />
+        {/*
+          Datos estructurados: le dicen a Google quién es la persona detrás
+          del sitio. JSON estático, sin riesgo de inyección.
+        */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: site.name,
+              url: site.url,
+              jobTitle: site.role,
+              email: `mailto:${site.email}`,
+              sameAs: [site.github, site.studio].filter(Boolean),
+            }),
           }}
         />
       </head>
