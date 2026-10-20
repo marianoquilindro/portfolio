@@ -3,6 +3,9 @@ import ProjectRow from "@/components/ProjectRow";
 import Reveal from "@/components/Reveal";
 import Words from "@/components/Words";
 import ContactForm from "@/components/ContactForm";
+import HeroShader from "@/components/HeroShader";
+import Scramble from "@/components/Scramble";
+import StackGroup from "@/components/StackGroup";
 import { projects } from "@/data/projects";
 import { site, stackGroups } from "@/data/site";
 
@@ -26,12 +29,25 @@ export default function Home() {
     <>
       {/* ── 00 · Hero ──────────────────────────────────────────── */}
       <section id="top" className="relative overflow-hidden">
+        {/* Fondo WebGL (ruido fbm). El glow CSS de abajo se superpone y el
+            velo degradado funde el shader con el fondo de la página. */}
+        <HeroShader className="absolute inset-0 h-full w-full" />
         <div
           className="glow -top-40 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 bg-accent/10"
           aria-hidden="true"
         />
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-b from-transparent to-background"
+          aria-hidden="true"
+        />
         <div className="relative mx-auto max-w-container px-4 sm:px-6 pb-20 pt-28 sm:pt-36 md:pb-32 md:pt-44">
-          <p className="font-mono text-sm text-accent">{"// portfolio"}</p>
+          <p className="flex items-center gap-2.5 font-mono text-sm text-accent">
+            <span className="relative flex h-2 w-2" aria-hidden="true">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
+            </span>
+            {"// disponible para proyectos"}
+          </p>
 
           <h1 className="mt-6 text-4xl xs:text-5xl font-medium leading-[0.95] tracking-tight sm:text-7xl md:text-8xl break-words">
             {heroLines.map((line, i) => (
@@ -81,6 +97,7 @@ export default function Home() {
             <Words
               text="Trabajo de punta a punta: modelo los datos, escribo la API y construyo la interfaz, y cuando hace falta dejo resueltos también el despliegue y las políticas de acceso. Poder pensar el sistema completo —en vez de una capa aislada— es lo que me permite encontrar los problemas antes de que lleguen a producción."
               className="text-xl leading-relaxed tracking-tight text-pretty sm:text-2xl"
+              mode="scroll"
             />
 
             <Reveal delay={2}>
@@ -141,43 +158,32 @@ export default function Home() {
           </h2>
 
           <div className="mt-12 space-y-10">
-            {stackGroups.map((group, groupIdx) => (
-              <div key={group.label} className="space-y-4">
-                <Reveal delay={groupIdx}>
-                  <div className="flex items-center gap-3">
-                    <h3 className="font-mono text-xs uppercase tracking-wider text-accent">
-                      {group.label}
-                    </h3>
-                    <span className="h-px flex-1 bg-edge/10" aria-hidden="true" />
-                  </div>
-                </Reveal>
-
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                  {group.items.map((tech, i) => (
-                    <Reveal key={tech.name} delay={i + 1}>
-                      <div className="group relative flex flex-col justify-between h-full rounded-xl border border-edge/10 bg-surface/60 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:bg-surface hover:shadow-xl hover:shadow-accent/5">
-                        <div>
-                          <div className="flex items-center justify-between gap-2">
-                            <h4 className="text-[15px] font-medium tracking-tight text-foreground transition-colors group-hover:text-accent">
-                              {tech.name}
-                            </h4>
-                            <span className="rounded-md border border-edge/10 bg-raised px-2 py-0.5 font-mono text-[10px] text-faint transition-colors group-hover:border-accent/30 group-hover:text-accent-soft">
-                              {tech.tag}
-                            </span>
-                          </div>
-                          <p className="mt-2.5 text-xs leading-relaxed text-muted transition-colors group-hover:text-foreground/90">
-                            {tech.description}
-                          </p>
+            {stackGroups.map((group) => (
+              <StackGroup key={group.label} label={group.label}>
+                {group.items.map((tech, i) => (
+                  <Reveal key={tech.name} delay={i + 1}>
+                    <div className="group relative flex flex-col justify-between h-full rounded-xl border border-edge/10 bg-surface/60 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:bg-surface hover:shadow-xl hover:shadow-accent/5">
+                      <div>
+                        <div className="flex items-center justify-between gap-2">
+                          <h4 className="text-[15px] font-medium tracking-tight text-foreground transition-colors group-hover:text-accent">
+                            {tech.name}
+                          </h4>
+                          <span className="rounded-md border border-edge/10 bg-raised px-2 py-0.5 font-mono text-[10px] text-faint transition-colors group-hover:border-accent/30 group-hover:text-accent-soft">
+                            {tech.tag}
+                          </span>
                         </div>
-                        <div className="mt-4 flex items-center gap-1.5 pt-2.5 border-t border-edge/5 font-mono text-[11px] text-faint group-hover:text-accent transition-colors">
-                          <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent/60 group-hover:scale-125 transition-transform" />
-                          <span>Stack activo</span>
-                        </div>
+                        <p className="mt-2.5 text-xs leading-relaxed text-muted transition-colors group-hover:text-foreground/90">
+                          {tech.description}
+                        </p>
                       </div>
-                    </Reveal>
-                  ))}
-                </div>
-              </div>
+                      <div className="mt-4 flex items-center gap-1.5 pt-2.5 border-t border-edge/5 font-mono text-[11px] text-faint group-hover:text-accent transition-colors">
+                        <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent/60 group-hover:scale-125 transition-transform" />
+                        <span>Stack activo</span>
+                      </div>
+                    </div>
+                  </Reveal>
+                ))}
+              </StackGroup>
             ))}
           </div>
         </div>
@@ -236,7 +242,13 @@ export default function Home() {
                         <span className="font-mono text-xs text-faint shrink-0">
                           {channel.label}
                         </span>
-                        <span className="text-base sm:text-lg tracking-tight truncate">{channel.value}</span>
+                        <span className="text-base sm:text-lg tracking-tight truncate">
+                          {channel.label === "Mail" ? (
+                            <Scramble text={channel.value} />
+                          ) : (
+                            channel.value
+                          )}
+                        </span>
                       </span>
                       <span className="arrow-shift text-accent shrink-0" aria-hidden="true">
                         ↗

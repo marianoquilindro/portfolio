@@ -20,6 +20,22 @@
   color-scheme: dark;
 }
 
+/* Tema claro: mismos nombres de variable, valores reinterpretados. `--edge`
+   pasa a ser tinta oscura porque define el color de todos los bordes. */
+[data-theme="light"] {
+  --background: 245 246 246;
+  --surface: 233 238 238;
+  --raised: 222 229 229;
+  --edge: 18 26 31;
+  --foreground: 16 23 27;
+  --muted: 74 90 97;
+  --faint: 116 130 137;
+  --accent: 13 148 136;
+  --accent-soft: 15 118 110;
+
+  color-scheme: light;
+}
+
 @layer base {
   * {
     border-color: rgb(var(--edge) / 0.08);
@@ -38,6 +54,7 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
   }
 
   ::selection {
@@ -88,6 +105,123 @@
   .link-underline:hover {
     background-size: 100% 1px;
   }
+
+  /* Preloader: contador + cortina que sube revelando el hero. */
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: grid;
+    place-items: center;
+    background: rgb(var(--background));
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 0.8s cubic-bezier(0.83, 0, 0.17, 1);
+  }
+  .preloader.is-done {
+    clip-path: inset(0 0 100% 0);
+  }
+  .preloader-name {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+    font-size: clamp(1rem, 4vw, 1.75rem);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+  }
+  .preloader-name span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(120%);
+    animation: preloader-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: calc(var(--i, 0) * 28ms);
+  }
+  @keyframes preloader-in {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Grano sutil sobre todo el sitio (decorativo). */
+  .grain {
+    position: fixed;
+    inset: -50%;
+    z-index: 70;
+    pointer-events: none;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation: grain 0.6s steps(4) infinite;
+  }
+  @keyframes grain {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-3%, 2%); }
+    50% { transform: translate(2%, -3%); }
+    75% { transform: translate(-2%, -2%); }
+    100% { transform: translate(3%, 3%); }
+  }
+
+  /* Texto con ancho congelado para el efecto scramble del mail. */
+  .scramble {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  /* Tilt 3D + brillo que sigue al mouse en las capturas de proyecto. */
+  .media-tilt {
+    position: relative;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+  .media-tilt::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    background: radial-gradient(
+      320px circle at var(--mx, 50%) var(--my, 50%),
+      rgb(var(--accent) / 0.14),
+      transparent 65%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .media-tilt:hover::after {
+    opacity: 1;
+  }
+
+  /* Letras del nav que saltan de a una al hacer hover. */
+  .nav-chars span {
+    display: inline-block;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: calc(var(--i, 0) * 16ms);
+  }
+  .nav-chars:hover span {
+    transform: translateY(-3px);
+  }
+
+  /* Acordeón de los grupos de stack. Solo plegable en mobile: por debajo de
+     md el panel se anima con grid-template-rows (0fr ↔ 1fr) y desde md el
+     CSS lo fuerza siempre abierto, ignorando el estado del componente. */
+  .stack-panel {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .stack-panel[data-collapsed="true"] {
+    grid-template-rows: 0fr;
+  }
+  .stack-panel > div {
+    min-height: 0;
+    overflow: hidden;
+  }
+  @media (min-width: 768px) {
+    .stack-panel,
+    .stack-panel[data-collapsed="true"] {
+      grid-template-rows: 1fr;
+    }
+  }
 }
 
 @layer utilities {
@@ -133,14 +267,19 @@
   animation: line-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   animation-delay: calc(var(--i, 0) * 90ms);
 }
+/* Con el preloader en pantalla, las líneas esperan detrás de la cortina:
+   si no, se animarían tapadas y el usuario no vería la entrada. */
+.js.intro-pending [data-line] > span {
+  animation-play-state: paused;
+}
 @keyframes line-up {
   to {
     transform: translateY(0);
   }
 }
 
-/* Párrafo revelado palabra por palabra. */
-.js [data-words] span {
+/* Párrafo revelado palabra por palabra (modo reveal). */
+.js [data-words="reveal"] span {
   display: inline-block;
   opacity: 0;
   transform: translateY(0.35em);
@@ -149,9 +288,19 @@
     transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   transition-delay: calc(var(--w, 0) * 22ms);
 }
-.js [data-words].is-visible span {
+.js [data-words="reveal"].is-visible span {
   opacity: 1;
   transform: none;
+}
+
+/* Párrafo que se enciende palabra por palabra con el scroll.
+   Sin JS o con movimiento reducido, las palabras quedan visibles. */
+.js [data-words="scroll"] span span {
+  opacity: 0.16;
+  transition: opacity 0.35s linear;
+}
+.js [data-words="scroll"] span span.is-lit {
+  opacity: 1;
 }
 
 /* Barra de progreso de scroll. */
@@ -217,8 +366,20 @@ a:hover > .arrow-shift {
     opacity: 1 !important;
     transform: none !important;
   }
+  .js [data-words="scroll"] span span {
+    opacity: 1 !important;
+  }
   .js [data-line] > span {
     animation: none !important;
     transform: none !important;
+  }
+  .grain {
+    display: none;
+  }
+  .media-tilt {
+    transition: none;
+  }
+  .stack-panel {
+    transition: none;
   }
 }

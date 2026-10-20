@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollEffects from "@/components/ScrollEffects";
+import Preloader from "@/components/Preloader";
 import { site } from "@/data/site";
 
 const geistSans = localFont({
@@ -82,13 +83,16 @@ export default function RootLayout({
     >
       <head>
         {/*
-          Marca el documento como "hay JavaScript" antes del primer pintado.
-          Las animaciones de revelado solo ocultan contenido si esta clase está:
-          sin JS, todo el texto se ve entero en lugar de quedar invisible.
+          Corre antes del primer pintado:
+          1. marca el documento como "hay JavaScript" —las animaciones de
+             revelado solo ocultan contenido si esta clase está—;
+          2. aplica el tema guardado (o el del sistema) en `data-theme`, así
+             no hay flash del tema equivocado al abrir la página.
+          Sin JS, todo el texto se ve entero y el tema por defecto es el oscuro.
         */}
         <script
           dangerouslySetInnerHTML={{
-            __html: "document.documentElement.classList.add('js')",
+            __html: `(function(){try{document.documentElement.classList.add('js');var t=null;try{t=localStorage.getItem('portfolio-theme')}catch(e){}if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}document.documentElement.setAttribute('data-theme',t)}catch(e){}})()`,
           }}
         />
       </head>
@@ -107,11 +111,14 @@ export default function RootLayout({
         >
           Saltar al contenido
         </a>
+        <Preloader />
         <Header />
         <main id="contenido" className="flex-1">
           {children}
         </main>
         <Footer />
+        {/* Grano animado sobre toda la página (decorativo). */}
+        <div className="grain" aria-hidden="true" />
       </body>
     </html>
   );

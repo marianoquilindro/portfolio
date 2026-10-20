@@ -57,6 +57,25 @@ export default function ProjectMedia({ views, label, title, idBase }: Props) {
   const panelId = `${idBase}-vista`;
   const tabId = (index: number) => `${idBase}-vista-${index}`;
 
+  // Tilt 3D liviano en el marco (solo mouse real, sin movimiento reducido).
+  // Sale de la versión "prueba": acá está en una sola sección, no en todo el sitio.
+  const tiltRef = useRef<HTMLDivElement>(null);
+  const onTiltMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const el = tiltRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const px = (event.clientX - rect.left) / rect.width;
+    const py = (event.clientY - rect.top) / rect.height;
+    el.style.transform = `perspective(1000px) rotateX(${(0.5 - py) * 4}deg) rotateY(${(px - 0.5) * 5}deg)`;
+    el.style.setProperty("--mx", `${px * 100}%`);
+    el.style.setProperty("--my", `${py * 100}%`);
+  };
+  const onTiltLeave = () => {
+    if (tiltRef.current) tiltRef.current.style.transform = "";
+  };
+
   // La captura entra entera dentro del marco: ver `.media-frame` en globals.css.
   const screen = (
     <div
@@ -81,11 +100,18 @@ export default function ProjectMedia({ views, label, title, idBase }: Props) {
 
   return (
     <div className="w-full min-w-0">
-      {isPhone ? (
-        <PhoneFrame>{screen}</PhoneFrame>
-      ) : (
-        <BrowserFrame label={label}>{screen}</BrowserFrame>
-      )}
+      <div
+        ref={tiltRef}
+        className="media-tilt w-full min-w-0"
+        onPointerMove={onTiltMove}
+        onPointerLeave={onTiltLeave}
+      >
+        {isPhone ? (
+          <PhoneFrame>{screen}</PhoneFrame>
+        ) : (
+          <BrowserFrame label={label}>{screen}</BrowserFrame>
+        )}
+      </div>
 
       {multi ? (
         <div

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
 import { site } from "@/data/site";
 
 const sections = [
@@ -103,7 +104,16 @@ export default function Header() {
                         : "text-muted hover:text-foreground"
                     }`}
                   >
-                    {section.label}
+                    {/* Cada letra se anima con escalón propio (ver .nav-chars).
+                        El label real va oculto para lectores de pantalla. */}
+                    <span className="nav-chars" aria-hidden="true">
+                      {[...section.label].map((ch, ci) => (
+                        <span key={ci} style={{ "--i": ci } as React.CSSProperties}>
+                          {ch === " " ? "\u00A0" : ch}
+                        </span>
+                      ))}
+                    </span>
+                    <span className="sr-only">{section.label}</span>
                   </a>
                 </li>
               );
@@ -113,6 +123,7 @@ export default function Header() {
 
         {/* Acciones derecha */}
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <a
             href={site.github}
             target="_blank"
